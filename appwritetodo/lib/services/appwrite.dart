@@ -32,4 +32,29 @@ class AppwriteServices {
       rethrow;
     }
   }
+
+  Future<List<Document>> getTask() async {
+    try {
+      final result = await databases.listDocuments(
+          databaseId: databaseId, collectionId: collectionId);
+      print("================================== appservice");
+      print(result);
+      print("================================== appservice");
+      return result.documents;
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  Future<void> delete(String DocumentId) async {
+    try {
+      final result = await databases.deleteDocument(
+          databaseId: databaseId,
+          collectionId: collectionId,
+          documentId: DocumentId);
+    } catch (e) {
+      print(e);
+    }
+  }
 }

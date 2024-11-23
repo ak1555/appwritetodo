@@ -9,7 +9,3 @@ void main() {
   );
 }
 
-// import 'package:appwrite/appwrite.dart';
-
-// Client client = Client();
-// client.setProject('674065a6003a2906a5c1');
