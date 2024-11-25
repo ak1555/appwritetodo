@@ -46,6 +46,19 @@ class _HomeState extends State<Home> {
     }
   }
 
+  Future<void> _updateTaskStatus(Task taskk) async {
+    try {
+      final updatetask =
+          await _appwriteServices.updateTaskstatus(taskk.id, !taskk.isComplete);
+      setState(() {
+        taskk.isComplete != updatetask.data['completed'];
+      });
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,30 +105,44 @@ class _HomeState extends State<Home> {
               itemBuilder: (context, index) {
                 return ListTile(
                   onLongPress: () {
-                  showDialog(context: context, builder: (context) {
-                    return Center(
-                      child: Container(
-                        height: 200,
-                        width: 250,
-                        child: Card(
-                          child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("Are you Want to Delete?"),
-                              MaterialButton(onPressed: () {
-                                  print("longpressed");
-                                          final DocumentId = _tasks![index].id;
-                                          print(DocumentId);
-                                          _appwriteServices.delete(DocumentId);
-                                          LoadTask();
-                              },child: Text("DELETE"),)
-                            ],
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return Center(
+                          child: Container(
+                            height: 200,
+                            width: 250,
+                            child: Card(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text("Are you Want to Delete?"),
+                                  MaterialButton(
+                                    onPressed: () {
+                                      print("longpressed");
+                                      final DocumentId = _tasks![index].id;
+                                      print(DocumentId);
+                                      _appwriteServices.delete(DocumentId);
+                                      LoadTask();
+                                    },
+                                    child: Text("DELETE"),
+                                  )
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     );
-                  },);
-                },
-                  title: Text(_tasks![index].taskk.toString()),
+                  },
+                  trailing: IconButton(
+                      onPressed: () {
+                        _updateTaskStatus(_tasks![index]);
+                      },
+                      icon: Icon(Icons.check)),
+                  title: Text(
+                    _tasks![index].taskk.toString(),
+                  ),
                 );
               },
             ))

@@ -57,4 +57,18 @@ class AppwriteServices {
       print(e);
     }
   }
+
+  Future<Document> updateTaskstatus(String documentId, bool completed) async {
+    try {
+      final result = await databases.updateDocument(
+          databaseId: databaseId,
+          collectionId: collectionId,
+          documentId: documentId,
+          data: {"isComplete": completed});
+          return result;
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
 }
